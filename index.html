@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>McLanche PitDog — Jardim Alto Paraíso, Goiânia</title>
+<meta name="description" content="Peça online! X-Saladas, Pizzas, Pastéis, Açaí. Delivery no Jardim Alto Paraíso e região. Até 50 min.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --laranja:#FF6B00; --laranja2:#E85E00;
+  --amarelo:#FFB800; --verde:#25D366;
+  --preto:#0A0A0A; --card:#141414; --card2:#1a1a1a;
+  --borda:#252525; --cinza:#888; --claro:#F0F0F0;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--preto);color:var(--claro);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* ── URGENCY BAR ── */
+.urgency{background:var(--laranja);text-align:center;padding:9px 5%;font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:1.8rem;flex-wrap:wrap}
+.urgency span{display:flex;align-items:center;gap:5px}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(10,10,10,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--borda);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Bebas Neue',cursive;font-size:1.55rem;letter-spacing:2px}
+.logo span{color:var(--laranja)}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.nav-links{display:flex;gap:1.6rem;list-style:none}
+.nav-links a{color:var(--cinza);text-decoration:none;font-size:.83rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--claro)}
+/* carrinho btn nav */
+.btn-cart-nav{background:var(--laranja);border:none;color:#fff;padding:8px 18px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s;position:relative}
+.btn-cart-nav:hover{background:var(--laranja2)}
+.cart-count{background:#fff;color:var(--laranja);border-radius:50%;width:18px;height:18px;font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;min-width:18px}
+.cart-count.hidden{display:none}
+
+/* ── HERO ── */
+.hero{padding:60px 5% 50px;background:radial-gradient(ellipse at 65% 50%,#2a1000 0%,var(--preto) 65%);display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:0;right:0;bottom:0;width:50%;background:radial-gradient(ellipse at center,rgba(255,107,0,.1),transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,0,.13);border:1px solid rgba(255,107,0,.3);color:var(--laranja);padding:6px 14px;border-radius:20px;font-size:.78rem;font-weight:600;margin-bottom:1.2rem;animation:fadeUp .5s ease both}
+.hero h1{font-family:'Bebas Neue',cursive;font-size:clamp(3rem,8vw,6rem);line-height:.93;letter-spacing:2px;margin-bottom:1rem;animation:fadeUp .6s .1s ease both}
+.hero h1 em{color:var(--laranja);font-style:normal}
+.hero-desc{color:var(--cinza);font-size:.97rem;max-width:440px;margin-bottom:1.8rem;line-height:1.7;animation:fadeUp .6s .2s ease both}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
+.btn-pedir-hero{background:var(--laranja);color:#fff;padding:14px 28px;border-radius:8px;font-weight:700;font-size:.97rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;border:none;cursor:pointer;transition:background .2s,transform .15s;font-family:'DM Sans',sans-serif}
+.btn-pedir-hero:hover{background:var(--laranja2);transform:translateY(-2px)}
+.btn-cardapio{background:transparent;color:var(--claro);border:1.5px solid var(--borda);padding:13px 26px;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;transition:border-color .2s,color .2s;font-family:'DM Sans',sans-serif;cursor:pointer}
+.btn-cardapio:hover{border-color:var(--laranja);color:var(--laranja)}
+.hero-trust{display:flex;gap:1.4rem;margin-top:2rem;flex-wrap:wrap;animation:fadeUp .6s .4s ease both}
+.trust-i{font-size:.8rem;color:var(--cinza);display:flex;align-items:center;gap:5px}
+.trust-i strong{color:var(--claro)}
+.hero-visual{position:relative;z-index:1;animation:fadeUp .8s .2s ease both}
+.hero-box{background:var(--card);border:1px solid var(--borda);border-radius:16px;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:7rem;margin-bottom:1rem}
+.hero-chips{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.chip{background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:.9rem;display:flex;align-items:center;gap:.7rem}
+.chip-icon{font-size:1.7rem}
+.chip-text{font-size:.75rem;color:var(--cinza)}
+.chip-text strong{display:block;color:var(--claro);font-size:.85rem}
+
+/* ── CARDÁPIO ── */
+#cardapio{padding:56px 5%;background:#0d0d0d;border-top:1px solid var(--borda)}
+.sec-eye{font-size:.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--laranja);margin-bottom:.3rem}
+.sec-title{font-family:'Bebas Neue',cursive;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:2px;margin-bottom:1.8rem}
+
+/* tabs */
+.tabs-wrap{overflow-x:auto;margin-bottom:1.8rem;-webkit-overflow-scrolling:touch}
+.tabs-wrap::-webkit-scrollbar{height:3px}
+.tabs-wrap::-webkit-scrollbar-track{background:var(--borda)}
+.tabs-wrap::-webkit-scrollbar-thumb{background:var(--laranja);border-radius:3px}
+.tabs{display:flex;gap:0;white-space:nowrap;border-bottom:1px solid var(--borda)}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--cinza);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;padding:10px 20px;cursor:pointer;transition:color .2s;margin-bottom:-1px}
+.tab-btn.active{color:var(--laranja);border-bottom-color:var(--laranja)}
+.tab-btn:hover:not(.active){color:var(--claro)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .3s ease}
+
+/* categoria recolhível */
+.cat{margin-bottom:1.2rem;border:1px solid var(--borda);border-radius:12px;overflow:hidden}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;background:var(--card);cursor:pointer;user-select:none;transition:background .2s}
+.cat-header:hover{background:var(--card2)}
+.cat-header-left{display:flex;align-items:center;gap:.7rem}
+.cat-header-left span:first-child{font-size:1.3rem}
+.cat-name{font-family:'Bebas Neue',cursive;font-size:1.2rem;letter-spacing:1.5px;color:var(--claro)}
+.cat-count{font-size:.72rem;color:var(--cinza);font-weight:500}
+.cat-chevron{color:var(--cinza);transition:transform .3s;font-size:1rem}
+.cat-body{display:none}
+.cat-body.open{display:block}
+
+/* nota categoria */
+.cat-note{background:rgba(255,184,0,.07);border-bottom:1px solid var(--borda);padding:.65rem 1.2rem;font-size:.8rem;color:#bbb}
+.cat-note strong{color:var(--amarelo)}
+
+/* item de menu */
+.menu-item{display:flex;align-items:center;gap:1rem;padding:.95rem 1.2rem;border-bottom:1px solid var(--borda);background:var(--card);transition:background .2s}
+.menu-item:last-child{border-bottom:none}
+.menu-item:hover{background:var(--card2)}
+.item-emoji{font-size:1.8rem;width:40px;text-align:center;flex-shrink:0}
+.item-info{flex:1;min-width:0}
+.item-name{font-weight:600;font-size:.93rem;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.item-desc{font-size:.74rem;color:var(--cinza);line-height:1.4}
+.badge-top{background:var(--laranja);color:#fff;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:10px}
+.badge-fav{background:var(--amarelo);color:var(--preto)}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0}
+.item-price{font-family:'Bebas Neue',cursive;font-size:1.2rem;color:var(--laranja);white-space:nowrap}
+.btn-add{background:var(--laranja);border:none;color:#fff;width:32px;height:32px;border-radius:8px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .1s;font-weight:700;line-height:1}
+.btn-add:hover{background:var(--laranja2);transform:scale(1.1)}
+.btn-add:active{transform:scale(.95)}
+
+/* ── CARRINHO LATERAL ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--card);z-index:501;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--borda)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{padding:1.2rem 1.4rem;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cart-head h2{font-family:'Bebas Neue',cursive;font-size:1.5rem;letter-spacing:2px}
+.btn-close-cart{background:var(--card2);border:1px solid var(--borda);color:var(--claro);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.btn-close-cart:hover{background:#333}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.4rem}
+.cart-body::-webkit-scrollbar{width:4px}
+.cart-body::-webkit-scrollbar-track{background:transparent}
+.cart-body::-webkit-scrollbar-thumb{background:var(--borda);border-radius:4px}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--cinza)}
+.cart-empty .empty-icon{font-size:3.5rem;display:block;margin-bottom:.8rem}
+.cart-item-card{background:var(--card2);border:1px solid var(--borda);border-radius:10px;padding:.9rem 1rem;margin-bottom:.8rem}
+.cart-item-top{display:flex;align-items:flex-start;gap:.8rem;margin-bottom:.6rem}
+.cart-item-emoji{font-size:1.5rem;flex-shrink:0;line-height:1}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-weight:600;font-size:.9rem;margin-bottom:2px}
+.cart-item-price{font-size:.78rem;color:var(--cinza)}
+.cart-item-controls{display:flex;align-items:center;gap:.5rem}
+.qty-btn{background:var(--borda);border:none;color:var(--claro);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;font-weight:700}
+.qty-btn:hover{background:var(--laranja)}
+.qty-num{font-weight:700;font-size:.9rem;min-width:20px;text-align:center}
+.cart-item-subtotal{font-family:'Bebas Neue',cursive;font-size:1.1rem;color:var(--laranja);margin-left:auto}
+.cart-obs-label{font-size:.72rem;color:var(--cinza);margin-bottom:.3rem}
+.cart-obs-input{width:100%;background:var(--card);border:1px solid var(--borda);border-radius:6px;color:var(--claro);padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:.8rem;resize:none;outline:none;transition:border-color .2s}
+.cart-obs-input:focus{border-color:var(--laranja)}
+
+.cart-footer{padding:1.2rem 1.4rem;border-top:1px solid var(--borda);flex-shrink:0}
+.cart-totals{margin-bottom:1rem}
+.total-row{display:flex;justify-content:space-between;font-size:.88rem;color:var(--cinza);margin-bottom:.4rem}
+.total-row.main{color:var(--claro);font-weight:700;font-size:1rem;border-top:1px solid var(--borda);padding-top:.6rem;margin-top:.4rem}
+.total-row.main .val{font-family:'Bebas Neue',cursive;font-size:1.4rem;color:var(--laranja)}
+
+.form-group{margin-bottom:.8rem}
+.form-label{font-size:.72rem;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem;display:block}
+.form-input{width:100%;background:var(--card);border:1px solid var(--borda);border-radius:8px;color:var(--claro);padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--laranja)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+
+.btn-finalizar{width:100%;background:var(--verde);border:none;color:#fff;padding:15px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:background .2s,transform .15s;margin-top:.8rem}
+.btn-finalizar:hover{background:#1fba5a;transform:translateY(-2px)}
+.btn-finalizar:active{transform:translateY(0)}
+.btn-finalizar:disabled{background:var(--borda);color:var(--cinza);cursor:not-allowed;transform:none}
+
+/* botão WPP flutuante */
+.wpp-float{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;align-items:center;gap:9px;background:var(--verde);color:#fff;padding:13px 20px;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;box-shadow:0 8px 30px rgba(37,211,102,.4);animation:pulse-g 2.5s infinite;transition:transform .2s}
+.wpp-float:hover{transform:scale(1.06)}
+.wpp-float svg{width:20px;height:20px;flex-shrink:0}
+@keyframes pulse-g{0%,100%{box-shadow:0 8px 30px rgba(37,211,102,.4)}50%{box-shadow:0 8px 50px rgba(37,211,102,.7)}}
+
+/* ── SOBRE ── */
+#sobre{padding:56px 5%;background:var(--preto);border-top:1px solid var(--borda);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.sobre-p{font-size:.93rem;color:var(--cinza);line-height:1.85;margin-bottom:.9rem}
+.av-block{background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1rem;margin-top:1.4rem}
+.av-stars{font-size:1.1rem}
+.av-t strong{display:block;font-size:1rem}
+.av-t span{font-size:.77rem;color:var(--cinza)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stat-box{background:var(--card);border:1px solid var(--borda);border-radius:11px;padding:1.4rem;text-align:center}
+.stat-n{font-family:'Bebas Neue',cursive;font-size:2.5rem;color:var(--laranja);display:block;line-height:1}
+.stat-l{font-size:.78rem;color:var(--cinza);margin-top:4px}
+
+/* ── DELIVERY CTA ── */
+#delivery{padding:56px 5%;background:linear-gradient(135deg,#1a0900 0%,var(--preto) 100%);border-top:1px solid var(--borda);text-align:center}
+.del-title{font-family:'Bebas Neue',cursive;font-size:clamp(2.2rem,6vw,3.5rem);letter-spacing:2px;margin-bottom:.4rem}
+.del-title span{color:var(--laranja)}
+.del-sub{color:var(--cinza);margin-bottom:2rem;font-size:.97rem}
+.del-chips{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.del-chip{background:var(--card);border:1px solid var(--borda);border-radius:50px;padding:10px 20px;font-size:.85rem;font-weight:500;display:flex;align-items:center;gap:7px}
+.big-wpp{display:inline-flex;align-items:center;gap:11px;background:var(--verde);color:#fff;padding:17px 44px;border-radius:10px;font-size:1.1rem;font-weight:700;text-decoration:none;box-shadow:0 0 40px rgba(37,211,102,.3);transition:transform .2s,box-shadow .2s}
+.big-wpp:hover{transform:scale(1.03);box-shadow:0 0 60px rgba(37,211,102,.5)}
+.big-wpp svg{width:24px;height:24px}
+.pix-note{margin-top:.9rem;font-size:.82rem;color:var(--cinza)}
+.pix-note strong{color:var(--amarelo)}
+
+/* ── CONTATO ── */
+#contato{padding:56px 5%;background:#0d0d0d;border-top:1px solid var(--borda);display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.c-rows{display:flex;flex-direction:column;gap:1rem}
+.c-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--borda);border-radius:10px;padding:.9rem 1.1rem}
+.c-ico{width:38px;height:38px;border-radius:8px;background:rgba(255,107,0,.1);border:1px solid rgba(255,107,0,.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.c-lbl{font-size:.68rem;color:var(--cinza);text-transform:uppercase;letter-spacing:1px}
+.c-val{font-size:.9rem;font-weight:600}
+.c-val a{color:var(--claro);text-decoration:none}
+.c-val a:hover{color:var(--laranja)}
+.pay-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.4rem}
+.pay-tag{background:var(--card);border:1px solid var(--borda);border-radius:6px;padding:5px 13px;font-size:.78rem;font-weight:600}
+.hor-box{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:1.4rem}
+.hor-box h4{font-family:'Bebas Neue',cursive;font-size:1.2rem;letter-spacing:2px;color:var(--laranja);margin-bottom:1rem}
+.hor-row{display:flex;justify-content:space-between;font-size:.86rem;padding:7px 0;border-bottom:1px solid var(--borda)}
+.hor-row:last-of-type{border-bottom:none}
+.hor-row span:last-child{font-weight:600}
+.aberto{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:var(--verde);font-size:.76rem;font-weight:600;padding:5px 12px;border-radius:20px;margin-top:.9rem}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--verde);animation:blink 1.5s infinite}
+
+/* ── FOOTER ── */
+footer{background:var(--preto);border-top:1px solid var(--borda);padding:1.8rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;gap:.8rem}
+.f-logo{font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:2px}
+.f-logo span{color:var(--laranja)}
+footer p{font-size:.76rem;color:var(--cinza)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--laranja);color:#fff;padding:10px 22px;border-radius:8px;font-weight:600;font-size:.88rem;opacity:0;pointer-events:none;transition:all .3s;z-index:600;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── UTILS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:2rem;padding:36px 5% 50px}
+  .hero-visual{order:-1}
+  .hero h1{font-size:3rem}
+  #sobre{grid-template-columns:1fr;gap:2rem}
+  #contato{grid-template-columns:1fr;gap:2rem}
+  .nav-links{display:none}
+}
+@media(max-width:500px){
+  .urgency{flex-direction:column;gap:3px;font-size:.75rem;padding:7px 5%}
+  .wpp-float .wpp-label{display:none}
+  .wpp-float{padding:13px;border-radius:50%}
+  .hero-btns{flex-direction:column}
+  .form-row{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- WPP FLUTUANTE -->
+<a href="https://wa.me/5562993051564" target="_blank" class="wpp-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="wpp-label">Chamar no WhatsApp</span>
+</a>
+
+<!-- CARRINHO OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+<!-- CARRINHO DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h2>🛒 Seu Pedido</h2>
+    <div style="display:flex;gap:.5rem;align-items:center">
+      <button onclick="limparCarrinho()" id="btnLimpar" style="display:none;background:rgba(255,50,50,.12);border:1px solid rgba(255,50,50,.25);color:#ff6b6b;border-radius:7px;padding:6px 12px;cursor:pointer;font-size:.75rem;font-weight:600;font-family:'DM Sans',sans-serif;transition:background .2s" onmouseover="this.style.background='rgba(255,50,50,.25)'" onmouseout="this.style.background='rgba(255,50,50,.12)'">🗑️ Limpar</button>
+      <button class="btn-close-cart" onclick="closeCart()">✕</button>
+    </div>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <span class="empty-icon">🛒</span>
+      <p style="font-weight:600;margin-bottom:.4rem">Carrinho vazio</p>
+      <p style="font-size:.83rem;color:var(--cinza)">Adicione itens do cardápio para montar seu pedido</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-totals">
+      <div class="total-row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
+      <div class="total-row" id="taxaRow"><span>🛵 Taxa de entrega</span><span id="taxaVal">R$ 4,00</span></div>
+      <div class="total-row" id="freteFreeRow" style="display:none"><span>🛵 Taxa de entrega</span><span style="color:#25D366;font-weight:700">Grátis 🎉</span></div>
+      <div class="total-row main"><span>Total</span><span class="val" id="totalVal">R$ 0,00</span></div>
+    </div>
+    <p id="freteMsg" style="font-size:.75rem;color:var(--cinza);margin-bottom:.8rem;text-align:center"></p>
+    <div class="form-group">
+      <label class="form-label">📍 Endereço de entrega *</label>
+      <input class="form-input" id="enderecoInput" placeholder="Rua, número, bairro..." type="text">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">💵 Troco para</label>
+        <input class="form-input" id="trocoInput" placeholder="Ex: R$ 50,00" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">💳 Pagamento</label>
+        <select class="form-input" id="pagamentoInput">
+          <option value="PIX (10% OFF)">PIX (-10%)</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Débito">Débito</option>
+          <option value="Crédito">Crédito</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">📝 Observação geral</label>
+      <input class="form-input" id="obsGeralInput" placeholder="Ex: sem cebola, apartamento 3...">
+    </div>
+    <button class="btn-finalizar" id="btnFinalizar" onclick="finalizarPedido()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar pedido pelo WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- URGENCY -->
+<div class="urgency">
+  <span>📍 Jardim Alto Paraíso – Goiânia</span>
+  <span>⏱️ Entrega em até <strong>50 min</strong></span>
+  <span>💳 <strong>10% OFF no PIX</strong></span>
+  <span>🛵 Delivery <strong>aberto agora</strong></span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Mc<span>Lanche</span>PitDog</div>
+  <ul class="nav-links">
+    <li><a href="#cardapio">Cardápio</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-cart-nav" onclick="openCart()">
+      🛒 Carrinho
+      <span class="cart-count hidden" id="navCartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🔥 Jardim Alto Paraíso • Goiânia</div>
+    <h1>O melhor<br><em>lanche</em><br>da região</h1>
+    <p class="hero-desc">X-Saladas, Pizzas, Pastéis e Açaí feitos com ingredientes frescos. Monte seu pedido e receba em casa em até 50 minutos.</p>
+    <div class="hero-btns">
+      <button class="btn-pedir-hero" onclick="document.getElementById('cardapio').scrollIntoView({behavior:'smooth'})">🍔 Montar pedido</button>
+      <a href="#contato" class="btn-cardapio">Ver contato →</a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-i">⭐ <strong>4.8</strong>&nbsp;no Google</div>
+      <div class="trust-i">⏱️ Até <strong>50 min</strong></div>
+      <div class="trust-i">💳 <strong>PIX, débito, crédito</strong></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-box" style="background:linear-gradient(135deg,#1c0e00,#2a1200);border:1px solid rgba(255,107,0,.25);overflow:hidden;padding:0;position:relative;">
+      <svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#FF6B00" stop-opacity="0"/>
+        </radialGradient>
+        <ellipse cx="210" cy="150" rx="180" ry="130" fill="url(#glow)"/>
+        <ellipse cx="210" cy="235" rx="140" ry="18" fill="#1a0900" opacity=".7"/>
+        <ellipse cx="210" cy="222" rx="115" ry="22" fill="#D4832A"/>
+        <ellipse cx="210" cy="210" rx="115" ry="16" fill="#E8943A"/>
+        <ellipse cx="210" cy="200" rx="118" ry="10" fill="#3a8c3a" opacity=".9"/>
+        <path d="M95 200 Q130 188 165 200 Q200 188 210 196 Q240 184 270 196 Q305 186 325 200" stroke="#4caf50" stroke-width="3" fill="none" opacity=".7"/>
+        <rect x="115" y="183" width="180" height="14" rx="5" fill="#c0392b" opacity=".85"/>
+        <line x1="150" y1="183" x2="150" y2="197" stroke="#922b21" stroke-width="1.5" opacity=".5"/>
+        <line x1="185" y1="183" x2="185" y2="197" stroke="#922b21" stroke-width="1.5" opacity=".5"/>
+        <line x1="220" y1="183" x2="220" y2="197" stroke="#922b21" stroke-width="1.5" opacity=".5"/>
+        <line x1="255" y1="183" x2="255" y2="197" stroke="#922b21" stroke-width="1.5" opacity=".5"/>
+        <rect x="105" y="164" width="200" height="20" rx="8" fill="#7B3F00"/>
+        <rect x="108" y="166" width="194" height="8" rx="4" fill="#8B4800" opacity=".6"/>
+        <path d="M108 164 Q130 172 155 163 Q175 172 200 163 Q225 172 250 163 Q275 172 300 163 L308 175 Q280 168 255 178 Q225 168 200 178 Q175 168 150 178 Q120 168 100 175 Z" fill="#F5C518" opacity=".92"/>
+        <path d="M110 152 Q150 144 190 152 Q230 144 270 152 Q290 148 310 152 L310 160 Q290 156 265 162 Q230 154 190 162 Q150 154 110 162 Z" fill="#8B1A1A" opacity=".85"/>
+        <rect x="100" y="136" width="210" height="18" rx="8" fill="#6B3300"/>
+        <ellipse cx="210" cy="118" rx="110" ry="35" fill="#D4832A"/>
+        <ellipse cx="210" cy="98" rx="105" ry="30" fill="#E8943A"/>
+        <ellipse cx="210" cy="88" rx="98" ry="22" fill="#F0A040"/>
+        <ellipse cx="190" cy="80" rx="30" ry="10" fill="#FFB84D" opacity=".4"/>
+        <ellipse cx="175" cy="78" rx="7" ry="3.5" fill="#c8860a" transform="rotate(-20,175,78)"/>
+        <ellipse cx="210" cy="72" rx="7" ry="3.5" fill="#c8860a" transform="rotate(10,210,72)"/>
+        <ellipse cx="245" cy="78" rx="7" ry="3.5" fill="#c8860a" transform="rotate(-10,245,78)"/>
+        <ellipse cx="193" cy="65" rx="6" ry="3" fill="#c8860a" transform="rotate(15,193,65)"/>
+        <ellipse cx="228" cy="67" rx="6" ry="3" fill="#c8860a" transform="rotate(-15,228,67)"/>
+        <rect x="330" y="140" width="44" height="65" rx="4" fill="#E8943A"/>
+        <rect x="333" y="128" width="38" height="18" rx="3" fill="#D4832A"/>
+        <rect x="337" y="100" width="6" height="30" rx="3" fill="#FFD54F"/>
+        <rect x="346" y="96" width="6" height="34" rx="3" fill="#FFD54F"/>
+        <rect x="355" y="102" width="6" height="28" rx="3" fill="#FFD54F"/>
+        <rect x="364" y="98" width="6" height="32" rx="3" fill="#FFD54F"/>
+        <path d="M170 60 Q165 45 170 30" stroke="#FF6B00" stroke-width="2" fill="none" stroke-linecap="round" opacity=".4"/>
+        <path d="M210 55 Q205 38 210 22" stroke="#FF6B00" stroke-width="2" fill="none" stroke-linecap="round" opacity=".35"/>
+        <path d="M250 60 Q255 43 250 28" stroke="#FF6B00" stroke-width="2" fill="none" stroke-linecap="round" opacity=".4"/>
+        <text x="210" y="270" text-anchor="middle" fill="#FF6B00" font-family="sans-serif" font-size="11" letter-spacing="3" opacity=".6">FEITO COM AMOR</text>
+      </svg>
+    </div>
+    <div class="hero-chips">
+      <div class="chip"><div class="chip-icon">🍕</div><div class="chip-text"><strong>Pizzas</strong>a partir de R$ 47,00</div></div>
+      <div class="chip"><div class="chip-icon">🫐</div><div class="chip-text"><strong>Açaí</strong>a partir de R$ 19,00</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CARDÁPIO -->
+<section id="cardapio">
+  <div class="sec-eye">Monte seu pedido</div>
+  <h2 class="sec-title">Cardápio Completo</h2>
+
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('xsalada',this)">🍔 X-Saladas</button>
+      <button class="tab-btn" onclick="showTab('pizza',this)">🍕 Pizzas</button>
+      <button class="tab-btn" onclick="showTab('pastel',this)">🥟 Pastéis</button>
+      <button class="tab-btn" onclick="showTab('acai',this)">🫐 Açaí</button>
+      <button class="tab-btn" onclick="showTab('bebidas',this)">🥤 Bebidas</button>
+    </div>
+  </div>
+
+  <!-- X-SALADAS -->
+  <div id="tab-xsalada" class="tab-panel active">
+
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🥩</span><span class="cat-name">Carne</span><span class="cat-count">7 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="xs1" data-name="X Simples (Carne)" data-price="19" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Simples</div><div class="item-desc">Pão, carne, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 19,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs2" data-name="X Especial (Carne)" data-price="20" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Especial</div><div class="item-desc">Pão, carne, ovo, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 20,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs3" data-name="X Bacon Simples" data-price="20" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Bacon Simples</div><div class="item-desc">Pão, carne, bacon, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 20,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs4" data-name="X Bacon Especial" data-price="22" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Bacon Especial</div><div class="item-desc">Pão, carne, bacon, ovo, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 22,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs5" data-name="X Tudo" data-price="24" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Tudo</div><div class="item-desc">Pão, carne, bacon, ovo, salsicha, cheddar, catupiry, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 24,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs6" data-name="X Super Tudo" data-price="27" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X Super Tudo <span class="badge-top">🔥 Mais pedido</span></div><div class="item-desc">Pão, 2 carnes, bacon, ovo, salsicha, cheddar, catupiry, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 27,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xs7" data-name="X À Moda (Carne)" data-price="30" data-emoji="🍔">
+          <div class="item-emoji">🍔</div>
+          <div class="item-info"><div class="item-name">X À Moda <span class="badge-top badge-fav">⭐ Top</span></div><div class="item-desc">Pão, 2 carnes, 2 bacons, ovo, 2 salsichas, cheddar, catupiry, 2 queijos, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 30,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🍗</span><span class="cat-name">Frango</span><span class="cat-count">6 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="xf1" data-name="X Frango Simples" data-price="19" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Simples</div><div class="item-desc">Pão, frango, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 19,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xf2" data-name="X Frango Especial" data-price="21" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Especial</div><div class="item-desc">Pão, frango, ovo, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 21,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xf3" data-name="X Frango Bacon Simples" data-price="20" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Bacon Simples</div><div class="item-desc">Pão, frango, bacon, salsicha, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 20,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xf4" data-name="X Frango Bacon Especial" data-price="21" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Bacon Especial</div><div class="item-desc">Pão, frango, bacon, ovo, salsicha, queijo, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 21,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xf5" data-name="X Frango Tudo" data-price="22" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Tudo</div><div class="item-desc">Pão, frango, bacon, ovo, salsicha, cheddar, catupiry, queijo, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 22,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="xf6" data-name="X Frango Duplo" data-price="30" data-emoji="🍗">
+          <div class="item-emoji">🍗</div>
+          <div class="item-info"><div class="item-name">X Frango Duplo <span class="badge-top badge-fav">⭐ Top</span></div><div class="item-desc">Pão, 2 frangos, bacon, ovo, 2 salsichas, cheddar, catupiry, 2 queijos, presunto, alface, tomate, milho e batata</div></div>
+          <div class="item-right"><div class="item-price">R$ 30,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🍟</span><span class="cat-name">Batata Frita</span><span class="cat-count">4 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="bf1" data-name="Batata Pequena Simples" data-price="14" data-emoji="🍟">
+          <div class="item-emoji">🍟</div>
+          <div class="item-info"><div class="item-name">Batata Pequena Simples</div></div>
+          <div class="item-right"><div class="item-price">R$ 14,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="bf2" data-name="Batata Pequena Especial" data-price="22" data-emoji="🍟">
+          <div class="item-emoji">🍟</div>
+          <div class="item-info"><div class="item-name">Batata Pequena Especial</div><div class="item-desc">Cheddar, bacon e catupiry</div></div>
+          <div class="item-right"><div class="item-price">R$ 22,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="bf3" data-name="Batata Grande Simples" data-price="32" data-emoji="🍟">
+          <div class="item-emoji">🍟</div>
+          <div class="item-info"><div class="item-name">Batata Grande Simples</div></div>
+          <div class="item-right"><div class="item-price">R$ 32,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+        <div class="menu-item" data-id="bf4" data-name="Batata Grande Especial" data-price="42" data-emoji="🍟">
+          <div class="item-emoji">🍟</div>
+          <div class="item-info"><div class="item-name">Batata Grande Especial</div><div class="item-desc">Cheddar, bacon e catupiry</div></div>
+          <div class="item-right"><div class="item-price">R$ 42,00</div><button class="btn-add" onclick="addItem(this)">+</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>➕</span><span class="cat-name">Adicionais</span><span class="cat-count">8 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body">
+        <div class="menu-item" data-id="ad1" data-name="Hambúrguer de Carne (adicional)" data-price="5" data-emoji="🍖"><div class="item-emoji">🍖</div><div class="item-info"><div class="item-name">Hambúrguer de Carne</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad2" data-name="Filé de Frango (adicional)" data-price="5" data-emoji="🍗"><div class="item-emoji">🍗</div><div class="item-info"><div class="item-name">Filé de Frango</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad3" data-name="Bacon (adicional)" data-price="5" data-emoji="🥓"><div class="item-emoji">🥓</div><div class="item-info"><div class="item-name">Bacon</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad4" data-name="Mussarela (adicional)" data-price="5" data-emoji="🧀"><div class="item-emoji">🧀</div><div class="item-info"><div class="item-name">Mussarela</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad5" data-name="Salsicha (adicional)" data-price="5" data-emoji="🌭"><div class="item-emoji">🌭</div><div class="item-info"><div class="item-name">Salsicha</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad6" data-name="Cheddar (adicional)" data-price="4" data-emoji="🧀"><div class="item-emoji">🧀</div><div class="item-info"><div class="item-name">Cheddar</div></div><div class="item-right"><div class="item-price">R$ 4,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad7" data-name="Catupiry (adicional)" data-price="4" data-emoji="🫙"><div class="item-emoji">🫙</div><div class="item-info"><div class="item-name">Catupiry</div></div><div class="item-right"><div class="item-price">R$ 4,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ad8" data-name="Ovo (adicional)" data-price="4" data-emoji="🥚"><div class="item-emoji">🥚</div><div class="item-info"><div class="item-name">Ovo</div></div><div class="item-right"><div class="item-price">R$ 4,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🥪</span><span class="cat-name">Misto Quente</span><span class="cat-count">2 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body">
+        <div class="menu-item" data-id="mq1" data-name="Misto Simples" data-price="12" data-emoji="🥪"><div class="item-emoji">🥪</div><div class="item-info"><div class="item-name">Misto Simples</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="mq2" data-name="Misto Especial" data-price="17" data-emoji="🥪"><div class="item-emoji">🥪</div><div class="item-info"><div class="item-name">Misto Especial</div></div><div class="item-right"><div class="item-price">R$ 17,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+
+  </div><!-- /tab xsalada -->
+
+  <!-- PIZZAS -->
+  <div id="tab-pizza" class="tab-panel">
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🍕</span><span class="cat-name">Pizzas</span><span class="cat-count">9 sabores</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="pz1" data-name="Pizza Mussarela" data-price="47" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Mussarela</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela e orégano</div></div><div class="item-right"><div class="item-price">R$ 47,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz2" data-name="Pizza Calabresa" data-price="50" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Calabresa</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, calabresa e orégano</div></div><div class="item-right"><div class="item-price">R$ 50,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz3" data-name="Pizza Calabresa e Cheddar" data-price="52" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Calabresa e Cheddar</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, calabresa, cheddar e orégano</div></div><div class="item-right"><div class="item-price">R$ 52,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz4" data-name="Pizza Calabresa e Catupiry" data-price="51" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Calabresa e Catupiry</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, calabresa, catupiry e orégano</div></div><div class="item-right"><div class="item-price">R$ 51,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz5" data-name="Pizza Frango e Cheddar" data-price="51" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Frango e Cheddar</div><div class="item-desc">Massa tradicional, molho, mussarela, frango, cheddar e orégano</div></div><div class="item-right"><div class="item-price">R$ 51,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz6" data-name="Pizza Frango e Catupiry" data-price="52" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Frango e Catupiry</div><div class="item-desc">Massa tradicional, molho, mussarela, frango, catupiry e orégano</div></div><div class="item-right"><div class="item-price">R$ 52,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz7" data-name="Pizza Bacon" data-price="54" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Bacon</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, bacon, milho e orégano</div></div><div class="item-right"><div class="item-price">R$ 54,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz8" data-name="Pizza Calabresa e Bacon" data-price="57" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">Calabresa e Bacon</div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, bacon, calabresa e orégano</div></div><div class="item-right"><div class="item-price">R$ 57,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pz9" data-name="Pizza À Moda" data-price="60" data-emoji="🍕"><div class="item-emoji">🍕</div><div class="item-info"><div class="item-name">À Moda <span class="badge-top badge-fav">⭐ Top</span></div><div class="item-desc">Massa tradicional, molho, presunto, mussarela, bacon, calabresa, cheddar, catupiry, milho e orégano</div></div><div class="item-right"><div class="item-price">R$ 60,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASTÉIS -->
+  <div id="tab-pastel" class="tab-panel">
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🥟</span><span class="cat-name">Pastéis</span><span class="cat-count">14 sabores</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="pa1" data-name="Pastel de Queijo" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Queijo</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa2" data-name="Pastel de Presunto" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Presunto</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa3" data-name="Pastel Presunto e Queijo" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Presunto e Queijo</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa4" data-name="Pastel de Frango" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Frango</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa5" data-name="Pastel Frango e Cheddar" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Frango e Cheddar</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa6" data-name="Pastel Frango e Catupiry" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Frango e Catupiry</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa7" data-name="Pastel Frango e Milho" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Frango e Milho</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa8" data-name="Pastel Frango e Bacon" data-price="12" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Frango e Bacon</div></div><div class="item-right"><div class="item-price">R$ 12,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa9" data-name="Pastel de Carne" data-price="13" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Carne</div></div><div class="item-right"><div class="item-price">R$ 13,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa10" data-name="Pastel Carne e Cheddar" data-price="13" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Carne e Cheddar</div></div><div class="item-right"><div class="item-price">R$ 13,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa11" data-name="Pastel Carne e Catupiry" data-price="13" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Carne e Catupiry</div></div><div class="item-right"><div class="item-price">R$ 13,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa12" data-name="Pastel Carne e Queijo" data-price="13" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Carne e Queijo</div></div><div class="item-right"><div class="item-price">R$ 13,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa13" data-name="Pastel Carne e Milho" data-price="13" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">Carne e Milho</div></div><div class="item-right"><div class="item-price">R$ 13,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="pa14" data-name="Pastel À Moda" data-price="15" data-emoji="🥟"><div class="item-emoji">🥟</div><div class="item-info"><div class="item-name">À Moda <span class="badge-top badge-fav">⭐ Top</span></div><div class="item-desc">Frango, presunto, queijo, catupiry, cheddar e milho</div></div><div class="item-right"><div class="item-price">R$ 15,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AÇAÍ -->
+  <div id="tab-acai" class="tab-panel">
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🫐</span><span class="cat-name">Açaí</span><span class="cat-count">3 tamanhos</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="cat-note"><strong>🍌 Acompanhamentos inclusos:</strong> Banana, Granola, Ninho e Leite Condensado</div>
+        <div class="menu-item" data-id="ac1" data-name="Açaí 300 mL" data-price="19" data-emoji="🫐"><div class="item-emoji">🫐</div><div class="item-info"><div class="item-name">Açaí 300 mL</div></div><div class="item-right"><div class="item-price">R$ 19,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ac2" data-name="Açaí 400 mL" data-price="21" data-emoji="🫐"><div class="item-emoji">🫐</div><div class="item-info"><div class="item-name">Açaí 400 mL</div></div><div class="item-right"><div class="item-price">R$ 21,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="ac3" data-name="Açaí 500 mL" data-price="24" data-emoji="🫐"><div class="item-emoji">🫐</div><div class="item-info"><div class="item-name">Açaí 500 mL <span class="badge-top">🔥 Favorito</span></div></div><div class="item-right"><div class="item-price">R$ 24,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>➕</span><span class="cat-name">Adicionais Açaí</span><span class="cat-count">2 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body">
+        <div class="menu-item" data-id="aca1" data-name="M&M (adicional açaí)" data-price="5" data-emoji="🍫"><div class="item-emoji">🍫</div><div class="item-info"><div class="item-name">M&M</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="aca2" data-name="Ovomaltine (adicional açaí)" data-price="5" data-emoji="🍫"><div class="item-emoji">🍫</div><div class="item-info"><div class="item-name">Ovomaltine</div></div><div class="item-right"><div class="item-price">R$ 5,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEBIDAS -->
+  <div id="tab-bebidas" class="tab-panel">
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🥤</span><span class="cat-name">Refrigerantes</span><span class="cat-count">4 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="menu-item" data-id="be1" data-name="Coca-Cola 1L" data-price="10" data-emoji="🥤"><div class="item-emoji">🥤</div><div class="item-info"><div class="item-name">Coca-Cola 1 L</div></div><div class="item-right"><div class="item-price">R$ 10,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="be2" data-name="Coca-Cola 2L" data-price="14" data-emoji="🥤"><div class="item-emoji">🥤</div><div class="item-info"><div class="item-name">Coca-Cola 2 L</div></div><div class="item-right"><div class="item-price">R$ 14,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="be3" data-name="Mineiro 2L" data-price="11" data-emoji="🥤"><div class="item-emoji">🥤</div><div class="item-info"><div class="item-name">Mineiro 2 L</div></div><div class="item-right"><div class="item-price">R$ 11,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="be4" data-name="Coca-Cola Lata" data-price="6" data-emoji="🥫"><div class="item-emoji">🥫</div><div class="item-info"><div class="item-name">Coca-Cola Lata</div></div><div class="item-right"><div class="item-price">R$ 6,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+    <div class="cat">
+      <div class="cat-header" onclick="toggleCat(this)">
+        <div class="cat-header-left"><span>🍹</span><span class="cat-name">Sucos e Cremes</span><span class="cat-count">3 itens</span></div>
+        <span class="cat-chevron">▼</span>
+      </div>
+      <div class="cat-body open">
+        <div class="cat-note"><strong>Sabores:</strong> Morango, Maracujá, Acerola, Goiaba, Abacaxi, Caju, Tamarindo, Cupuaçu e Açaí</div>
+        <div class="menu-item" data-id="suc1" data-name="Suco 500 mL" data-price="10" data-emoji="🍹"><div class="item-emoji">🍹</div><div class="item-info"><div class="item-name">Suco 500 mL</div><div class="item-desc">Informe o sabor na observação</div></div><div class="item-right"><div class="item-price">R$ 10,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="suc2" data-name="Creme 500 mL" data-price="15" data-emoji="🍹"><div class="item-emoji">🍹</div><div class="item-info"><div class="item-name">Creme 500 mL</div><div class="item-desc">Informe o sabor na observação</div></div><div class="item-right"><div class="item-price">R$ 15,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+        <div class="menu-item" data-id="suc3" data-name="Creme 2 Polpas 500 mL" data-price="17" data-emoji="🍹"><div class="item-emoji">🍹</div><div class="item-info"><div class="item-name">Creme 2 Polpas 500 mL</div><div class="item-desc">Informe os sabores na observação</div></div><div class="item-right"><div class="item-price">R$ 17,00</div><button class="btn-add" onclick="addItem(this)">+</button></div></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div>
+    <div class="sec-eye">Nossa história</div>
+    <h2 class="sec-title" style="margin-bottom:1.2rem">Feito com<br><span style="color:var(--laranja)">amor de família</span></h2>
+    <p class="sobre-p">O McLanche PitDog é um negócio familiar no Jardim Alto Paraíso, em Goiânia. Criado com o objetivo de oferecer lanches saborosos, caprichados e com ingredientes frescos para toda a vizinhança.</p>
+    <p class="sobre-p">Cada X-Salada, pizza, pastel e açaí é preparado com cuidado. Fazemos delivery direto pelo WhatsApp — rápido, simples, sem pagar taxa de app.</p>
+    <div class="av-block">
+      <div class="av-stars">⭐⭐⭐⭐⭐</div>
+      <div class="av-t"><strong>4.8 / 5.0 no Google</strong><span>Avaliado por clientes reais em Goiânia</span></div>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box"><span class="stat-n">🍔</span><div class="stat-l">X-Saladas variadas</div></div>
+    <div class="stat-box"><span class="stat-n">🍕</span><div class="stat-l">9 sabores de pizza</div></div>
+    <div class="stat-box"><span class="stat-n">⏱️</span><div class="stat-l">Até 50 min</div></div>
+    <div class="stat-box"><span class="stat-n">💳</span><div class="stat-l">PIX, débito e crédito</div></div>
+  </div>
+</section>
+
+<!-- DELIVERY CTA -->
+<section id="delivery">
+  <div class="sec-eye" style="color:var(--laranja)">Sem taxa de app</div>
+  <h2 class="del-title">Peça direto pelo<br><span>WhatsApp</span></h2>
+  <p class="del-sub">Monte seu pedido aqui no site e a gente recebe tudo organizadinho.</p>
+  <div class="del-chips">
+    <div class="del-chip">⏱️ Até 50 minutos</div>
+    <div class="del-chip">📍 Jardim Alto Paraíso e região</div>
+    <div class="del-chip">🛵 Entregamos na sua porta</div>
+    <div class="del-chip">💳 Todas as formas de pagamento</div>
+  </div>
+  <a href="https://wa.me/5562993051564?text=Olá!%20Quero%20fazer%20um%20pedido%20no%20McLanche%20PitDog!" target="_blank" class="big-wpp">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Montar pedido agora
+  </a>
+  <p class="pix-note">💡 Informe ao pedir para ganhar <strong>10% de desconto no PIX</strong></p>
+</section>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div>
+    <div class="sec-eye">Fale com a gente</div>
+    <h2 class="sec-title" style="margin-bottom:1.5rem">Contato</h2>
+    <div class="c-rows">
+      <div class="c-row"><div class="c-ico">📲</div><div><div class="c-lbl">WhatsApp</div><div class="c-val"><a href="https://wa.me/5562993051564" target="_blank">(62) 99305-1564</a></div></div></div>
+      <div class="c-row"><div class="c-ico">📧</div><div><div class="c-lbl">E-mail</div><div class="c-val"><a href="mailto:sj164056@gmail.com">sj164056@gmail.com</a></div></div></div>
+      <div class="c-row"><div class="c-ico">📸</div><div><div class="c-lbl">Instagram</div><div class="c-val"><a href="https://instagram.com/mclanchepitdog" target="_blank">@mclanchepitdog</a></div></div></div>
+      <div class="c-row"><div class="c-ico">📍</div><div><div class="c-lbl">Localização</div><div class="c-val"><span>Jardim Alto Paraíso, Goiânia – GO</span></div></div></div>
+    </div>
+    <div class="pay-tags">
+      <span class="pay-tag">💳 Débito</span>
+      <span class="pay-tag">💳 Crédito</span>
+      <span class="pay-tag">💵 Dinheiro</span>
+      <span class="pay-tag" style="border-color:rgba(255,184,0,.3);color:var(--amarelo)">🏦 PIX (-10%)</span>
+    </div>
+  </div>
+  <div class="hor-box">
+    <h4>⏰ Horário de Funcionamento</h4>
+    <div class="hor-row"><span>Segunda – Sexta</span><span>17h – 23h</span></div>
+    <div class="hor-row"><span>Sábado</span><span>16h – 00h</span></div>
+    <div class="hor-row"><span>Domingo</span><span>16h – 23h</span></div>
+    <div class="aberto"><div class="dot"></div>Aceitando pedidos agora</div>
+    <div style="margin-top:1.8rem;padding-top:1.4rem;border-top:1px solid var(--borda)">
+      <p style="font-size:.82rem;color:var(--cinza);margin-bottom:.8rem">Prefere chamar direto?</p>
+      <a href="https://wa.me/5562993051564?text=Olá!%20Vim%20pelo%20site!" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:var(--verde);color:#fff;padding:11px 22px;border-radius:8px;font-weight:700;font-size:.88rem;text-decoration:none;transition:background .2s" onmouseover="this.style.background='#1fba5a'" onmouseout="this.style.background='var(--verde)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chamar no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">Mc<span>Lanche</span>PitDog</div>
+  <p>📍 Jardim Alto Paraíso, Goiânia – GO</p>
+  <p>© 2026 McLanche PitDog. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+// ─── ESTADO ───
+let cart = [];
+const TAXA_ENTREGA = 4;
+const FRETE_GRATIS_ACIMA = 60;
+
+function saveCart(){
+  try{ localStorage.setItem('pitdog_cart', JSON.stringify(cart)); }catch(e){}
+}
+function loadCart(){
+  try{
+    const s = localStorage.getItem('pitdog_cart');
+    if(s){ cart = JSON.parse(s); renderCart(); }
+  }catch(e){}
+}
+
+// ─── ADICIONAR ITEM ───
+function addItem(btn){
+  const row   = btn.closest('.menu-item');
+  const id    = row.dataset.id;
+  const name  = row.dataset.name;
+  const price = parseFloat(row.dataset.price);
+  const emoji = row.dataset.emoji || '🍔';
+
+  const existing = cart.find(i => i.id === id);
+  if(existing){ existing.qty++; }
+  else { cart.push({ id, name, price, emoji, qty:1, obs:'' }); }
+
+  saveCart();
+  renderCart();
+  showToast('✅ ' + name + ' adicionado!');
+
+  btn.textContent = '✓';
+  btn.style.background = '#22c55e';
+  setTimeout(()=>{ btn.textContent = '+'; btn.style.background = ''; }, 700);
+}
+
+// ─── LIMPAR CARRINHO ───
+function limparCarrinho(){
+  if(!confirm('Limpar todo o carrinho?')) return;
+  cart = [];
+  saveCart();
+  renderCart();
+  showToast('🗑️ Carrinho limpo!');
+}
+
+// ─── CALCULAR TOTAL ───
+function calcTotals(){
+  const subtotal = cart.reduce((s,i) => s + (i.price * i.qty), 0);
+  const taxaGratis = subtotal >= FRETE_GRATIS_ACIMA;
+  const taxa = taxaGratis ? 0 : TAXA_ENTREGA;
+  const total = subtotal + taxa;
+  return { subtotal, taxa, taxaGratis, total };
+}
+
+// ─── RENDERIZAR CARRINHO ───
+function renderCart(){
+  const body       = document.getElementById('cartBody');
+  const footer     = document.getElementById('cartFooter');
+  const emptyEl    = document.getElementById('cartEmpty');
+  const countEl    = document.getElementById('navCartCount');
+  const subtotalEl = document.getElementById('subtotalVal');
+  const totalEl    = document.getElementById('totalVal');
+  const taxaRow    = document.getElementById('taxaRow');
+  const freteFree  = document.getElementById('freteFreeRow');
+  const freteMsg   = document.getElementById('freteMsg');
+  const btnLimpar  = document.getElementById('btnLimpar');
+
+  const totalQty = cart.reduce((s,i) => s + i.qty, 0);
+
+  // badge nav
+  if(totalQty > 0){
+    countEl.textContent = totalQty;
+    countEl.classList.remove('hidden');
+  } else {
+    countEl.classList.add('hidden');
+  }
+
+  // botão limpar
+  if(btnLimpar) btnLimpar.style.display = cart.length > 0 ? 'block' : 'none';
+
+  if(cart.length === 0){
+    emptyEl.style.display = 'block';
+    footer.style.display  = 'none';
+    // remove itens antigos
+    body.querySelectorAll('.cart-item-card').forEach(e => e.remove());
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  footer.style.display  = 'block';
+
+  // remove itens antigos antes de re-renderizar
+  body.querySelectorAll('.cart-item-card').forEach(e => e.remove());
+
+  // renderiza cada item
+  cart.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'cart-item-card';
+    card.dataset.cartId = item.id;
+    card.innerHTML = `
+      <div class="cart-item-top">
+        <div class="cart-item-emoji">${item.emoji}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">R$ ${item.price.toFixed(2).replace('.',',')}/un</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem">
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+        </div>
+        <span class="cart-item-subtotal">R$ ${(item.price*item.qty).toFixed(2).replace('.',',')}</span>
+        <button onclick="removeItem('${item.id}')" style="margin-left:auto;background:rgba(255,50,50,.12);border:1px solid rgba(255,50,50,.2);color:#ff6b6b;border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.8rem;transition:background .2s" onmouseover="this.style.background='rgba(255,50,50,.25)'" onmouseout="this.style.background='rgba(255,50,50,.12)'">🗑️</button>
+      </div>
+      <div class="cart-obs-label">📝 Observação deste item</div>
+      <textarea class="cart-obs-input" rows="2" placeholder="Ex: sem cebola, bem passado..." oninput="updateObs('${item.id}',this.value)">${item.obs}</textarea>
+    `;
+    // insere antes do footer (que está fora do body agora)
+    body.appendChild(card);
+  });
+
+  // totais
+  const { subtotal, taxaGratis, total } = calcTotals();
+  subtotalEl.textContent = 'R$ ' + subtotal.toFixed(2).replace('.',',');
+  totalEl.textContent    = 'R$ ' + total.toFixed(2).replace('.',',');
+
+  // taxa de entrega
+  if(taxaGratis){
+    taxaRow.style.display   = 'none';
+    freteFree.style.display = 'flex';
+    freteMsg.textContent    = '';
+  } else {
+    taxaRow.style.display   = 'flex';
+    freteFree.style.display = 'none';
+    const falta = FRETE_GRATIS_ACIMA - subtotal;
+    freteMsg.textContent = `➕ Falta R$ ${falta.toFixed(2).replace('.',',')} para frete grátis!`;
+  }
+}
+
+function changeQty(id, delta){
+  const item = cart.find(i => i.id === id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty <= 0){ cart = cart.filter(i => i.id !== id); }
+  saveCart();
+  renderCart();
+}
+
+function removeItem(id){
+  cart = cart.filter(i => i.id !== id);
+  saveCart();
+  renderCart();
+  showToast('🗑️ Item removido');
+}
+
+function updateObs(id, val){
+  const item = cart.find(i => i.id === id);
+  if(item){ item.obs = val; saveCart(); }
+}
+
+// ─── FINALIZAR PEDIDO ───
+function finalizarPedido(){
+  const endereco  = document.getElementById('enderecoInput').value.trim();
+  const troco     = document.getElementById('trocoInput').value.trim();
+  const pagamento = document.getElementById('pagamentoInput').value;
+  const obsGeral  = document.getElementById('obsGeralInput').value.trim();
+
+  if(!endereco){
+    document.getElementById('enderecoInput').focus();
+    document.getElementById('enderecoInput').style.borderColor = 'var(--laranja)';
+    showToast('⚠️ Informe o endereço de entrega!');
+    return;
+  }
+
+  if(cart.length === 0){ showToast('⚠️ Carrinho vazio!'); return; }
+
+  const { subtotal, taxaGratis, total } = calcTotals();
+
+  let msg = '🍔 *Novo Pedido — McLanche PitDog*\n';
+  msg += '━━━━━━━━━━━━━━━━━━━━\n';
+
+  cart.forEach(item => {
+    msg += `\n*${item.qty}x ${item.name}* — R$ ${(item.price*item.qty).toFixed(2).replace('.',',')}`;
+    if(item.obs) msg += `\n   📝 _${item.obs}_`;
+  });
+
+  msg += '\n\n━━━━━━━━━━━━━━━━━━━━';
+  msg += `\n🧾 *Subtotal: R$ ${subtotal.toFixed(2).replace('.',',')}*`;
+  msg += taxaGratis
+    ? `\n🛵 *Taxa de entrega: GRÁTIS* 🎉`
+    : `\n🛵 *Taxa de entrega: R$ 4,00*`;
+  msg += `\n💰 *TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+  msg += `\n💳 *Pagamento: ${pagamento}*`;
+  if(troco) msg += `\n💵 *Troco para: ${troco}*`;
+  msg += `\n📍 *Endereço: ${endereco}*`;
+  if(obsGeral) msg += `\n📝 *Obs. geral: ${obsGeral}*`;
+  msg += '\n━━━━━━━━━━━━━━━━━━━━';
+  msg += '\n_Pedido recebido pelo site McLanche PitDog_';
+
+  const encoded = encodeURIComponent(msg);
+  window.open('https://wa.me/5562993051564?text=' + encoded, '_blank');
+}
+
+// ─── TABS ───
+function showTab(name, btn){
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── CATEGORIAS RECOLHÍVEIS ───
+function toggleCat(header){
+  const body    = header.nextElementSibling;
+  const chevron = header.querySelector('.cat-chevron');
+  const isOpen  = body.classList.toggle('open');
+  chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(-90deg)';
+}
+
+// ─── DRAWER ───
+function openCart(){
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderCart(); // força re-render ao abrir
+}
+function closeCart(){
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── TOAST ───
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── INIT ───
+loadCart();
+</script>
+</body>
+</html>
