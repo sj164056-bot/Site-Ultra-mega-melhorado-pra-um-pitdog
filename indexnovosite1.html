@@ -276,10 +276,28 @@ footer p{font-size:.76rem;color:var(--cinza)}
       <div class="total-row main"><span>Total</span><span class="val" id="totalVal">R$ 0,00</span></div>
     </div>
     <p id="freteMsg" style="font-size:.75rem;color:var(--cinza);margin-bottom:.8rem;text-align:center"></p>
+
+    <!-- ENTREGA OU RETIRADA -->
     <div class="form-group">
+      <label class="form-label">🏠 Como vai receber?</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.3rem">
+        <button id="btnEntrega" onclick="setModalidade('entrega')"
+          style="padding:10px;border-radius:8px;border:2px solid var(--laranja);background:var(--laranja);color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s">
+          🛵 Entrega
+        </button>
+        <button id="btnRetirada" onclick="setModalidade('retirada')"
+          style="padding:10px;border-radius:8px;border:2px solid var(--borda);background:transparent;color:var(--cinza);font-family:'DM Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s">
+          🚶 Vou buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- CAMPO ENDEREÇO (só entrega) -->
+    <div id="grupoEndereco" class="form-group">
       <label class="form-label">📍 Endereço de entrega *</label>
       <input class="form-input" id="enderecoInput" placeholder="Rua, número, bairro..." type="text">
     </div>
+
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">💵 Troco para</label>
@@ -741,17 +759,48 @@ footer p{font-size:.76rem;color:var(--cinza)}
 <script>
 // ─── ESTADO ───
 let cart = [];
-const TAXA_ENTREGA = 4;
-const FRETE_GRATIS_ACIMA = 60;
+let modalidade = 'entrega'; // 'entrega' | 'retirada'
+const TAXA_ENTREGA     = 4;
+const FRETE_GRATIS_ACM = 60;
 
+// ─── SESSÃO (carrinho some ao fechar o navegador/aba) ───
 function saveCart(){
-  try{ localStorage.setItem('pitdog_cart', JSON.stringify(cart)); }catch(e){}
+  try{ sessionStorage.setItem('pitdog_cart', JSON.stringify(cart)); }catch(e){}
 }
 function loadCart(){
   try{
-    const s = localStorage.getItem('pitdog_cart');
-    if(s){ cart = JSON.parse(s); renderCart(); }
+    const s = sessionStorage.getItem('pitdog_cart');
+    if(s){ cart = JSON.parse(s); }
   }catch(e){}
+}
+
+// ─── MODALIDADE ENTREGA / RETIRADA ───
+function setModalidade(modo){
+  modalidade = modo;
+  const btnE = document.getElementById('btnEntrega');
+  const btnR = document.getElementById('btnRetirada');
+  const grpE = document.getElementById('grupoEndereco');
+
+  if(modo === 'entrega'){
+    btnE.style.background   = 'var(--laranja)';
+    btnE.style.borderColor  = 'var(--laranja)';
+    btnE.style.color        = '#fff';
+    btnR.style.background   = 'transparent';
+    btnR.style.borderColor  = 'var(--borda)';
+    btnR.style.color        = 'var(--cinza)';
+    grpE.style.display      = 'block';
+  } else {
+    btnR.style.background   = 'var(--laranja)';
+    btnR.style.borderColor  = 'var(--laranja)';
+    btnR.style.color        = '#fff';
+    btnE.style.background   = 'transparent';
+    btnE.style.borderColor  = 'var(--borda)';
+    btnE.style.color        = 'var(--cinza)';
+    grpE.style.display      = 'none';
+    document.getElementById('enderecoInput').value = '';
+    document.getElementById('enderecoInput').style.borderColor = '';
+  }
+  renderCart(); // re-calcula totais (taxa some se retirada)
 }
 
 // ─── ADICIONAR ITEM ───
@@ -764,7 +813,7 @@ function addItem(btn){
 
   const existing = cart.find(i => i.id === id);
   if(existing){ existing.qty++; }
-  else { cart.push({ id, name, price, emoji, qty:1, obs:'' }); }
+  else { cart.push({ id, name, price, emoji, qty: 1, obs: '' }); }
 
   saveCart();
   renderCart();
@@ -772,7 +821,7 @@ function addItem(btn){
 
   btn.textContent = '✓';
   btn.style.background = '#22c55e';
-  setTimeout(()=>{ btn.textContent = '+'; btn.style.background = ''; }, 700);
+  setTimeout(() => { btn.textContent = '+'; btn.style.background = ''; }, 700);
 }
 
 // ─── LIMPAR CARRINHO ───
@@ -784,13 +833,14 @@ function limparCarrinho(){
   showToast('🗑️ Carrinho limpo!');
 }
 
-// ─── CALCULAR TOTAL ───
+// ─── CALCULAR TOTAIS ───
 function calcTotals(){
-  const subtotal = cart.reduce((s,i) => s + (i.price * i.qty), 0);
-  const taxaGratis = subtotal >= FRETE_GRATIS_ACIMA;
-  const taxa = taxaGratis ? 0 : TAXA_ENTREGA;
-  const total = subtotal + taxa;
-  return { subtotal, taxa, taxaGratis, total };
+  const subtotal    = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+  const isEntrega   = modalidade === 'entrega';
+  const taxaGratis  = subtotal >= FRETE_GRATIS_ACM;
+  const taxa        = isEntrega ? (taxaGratis ? 0 : TAXA_ENTREGA) : 0;
+  const total       = subtotal + taxa;
+  return { subtotal, taxa, taxaGratis, total, isEntrega };
 }
 
 // ─── RENDERIZAR CARRINHO ───
@@ -806,15 +856,11 @@ function renderCart(){
   const freteMsg   = document.getElementById('freteMsg');
   const btnLimpar  = document.getElementById('btnLimpar');
 
-  const totalQty = cart.reduce((s,i) => s + i.qty, 0);
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
 
   // badge nav
-  if(totalQty > 0){
-    countEl.textContent = totalQty;
-    countEl.classList.remove('hidden');
-  } else {
-    countEl.classList.add('hidden');
-  }
+  countEl.textContent = totalQty;
+  totalQty > 0 ? countEl.classList.remove('hidden') : countEl.classList.add('hidden');
 
   // botão limpar
   if(btnLimpar) btnLimpar.style.display = cart.length > 0 ? 'block' : 'none';
@@ -822,7 +868,6 @@ function renderCart(){
   if(cart.length === 0){
     emptyEl.style.display = 'block';
     footer.style.display  = 'none';
-    // remove itens antigos
     body.querySelectorAll('.cart-item-card').forEach(e => e.remove());
     return;
   }
@@ -830,14 +875,13 @@ function renderCart(){
   emptyEl.style.display = 'none';
   footer.style.display  = 'block';
 
-  // remove itens antigos antes de re-renderizar
+  // remove itens antigos
   body.querySelectorAll('.cart-item-card').forEach(e => e.remove());
 
-  // renderiza cada item
+  // renderiza itens
   cart.forEach(item => {
     const card = document.createElement('div');
     card.className = 'cart-item-card';
-    card.dataset.cartId = item.id;
     card.innerHTML = `
       <div class="cart-item-top">
         <div class="cart-item-emoji">${item.emoji}</div>
@@ -858,25 +902,32 @@ function renderCart(){
       <div class="cart-obs-label">📝 Observação deste item</div>
       <textarea class="cart-obs-input" rows="2" placeholder="Ex: sem cebola, bem passado..." oninput="updateObs('${item.id}',this.value)">${item.obs}</textarea>
     `;
-    // insere antes do footer (que está fora do body agora)
     body.appendChild(card);
   });
 
   // totais
-  const { subtotal, taxaGratis, total } = calcTotals();
+  const { subtotal, taxa, taxaGratis, total, isEntrega } = calcTotals();
   subtotalEl.textContent = 'R$ ' + subtotal.toFixed(2).replace('.',',');
   totalEl.textContent    = 'R$ ' + total.toFixed(2).replace('.',',');
 
-  // taxa de entrega
-  if(taxaGratis){
+  // linha de taxa de entrega
+  if(!isEntrega){
+    // retirada: sem taxa
+    taxaRow.style.display   = 'none';
+    freteFree.style.display = 'none';
+    freteMsg.textContent    = '🚶 Retirada no local — sem taxa de entrega!';
+    freteMsg.style.color    = '#25D366';
+  } else if(taxaGratis){
     taxaRow.style.display   = 'none';
     freteFree.style.display = 'flex';
     freteMsg.textContent    = '';
+    freteMsg.style.color    = '';
   } else {
     taxaRow.style.display   = 'flex';
     freteFree.style.display = 'none';
-    const falta = FRETE_GRATIS_ACIMA - subtotal;
+    const falta = FRETE_GRATIS_ACM - subtotal;
     freteMsg.textContent = `➕ Falta R$ ${falta.toFixed(2).replace('.',',')} para frete grátis!`;
+    freteMsg.style.color = 'var(--cinza)';
   }
 }
 
@@ -903,19 +954,20 @@ function updateObs(id, val){
 
 // ─── FINALIZAR PEDIDO ───
 function finalizarPedido(){
+  const isEntrega = modalidade === 'entrega';
   const endereco  = document.getElementById('enderecoInput').value.trim();
   const troco     = document.getElementById('trocoInput').value.trim();
   const pagamento = document.getElementById('pagamentoInput').value;
   const obsGeral  = document.getElementById('obsGeralInput').value.trim();
 
-  if(!endereco){
+  if(cart.length === 0){ showToast('⚠️ Carrinho vazio!'); return; }
+
+  if(isEntrega && !endereco){
     document.getElementById('enderecoInput').focus();
     document.getElementById('enderecoInput').style.borderColor = 'var(--laranja)';
     showToast('⚠️ Informe o endereço de entrega!');
     return;
   }
-
-  if(cart.length === 0){ showToast('⚠️ Carrinho vazio!'); return; }
 
   const { subtotal, taxaGratis, total } = calcTotals();
 
@@ -929,19 +981,26 @@ function finalizarPedido(){
 
   msg += '\n\n━━━━━━━━━━━━━━━━━━━━';
   msg += `\n🧾 *Subtotal: R$ ${subtotal.toFixed(2).replace('.',',')}*`;
-  msg += taxaGratis
-    ? `\n🛵 *Taxa de entrega: GRÁTIS* 🎉`
-    : `\n🛵 *Taxa de entrega: R$ 4,00*`;
-  msg += `\n💰 *TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+
+  if(isEntrega){
+    msg += taxaGratis
+      ? `\n🛵 *Entrega: GRÁTIS* 🎉`
+      : `\n🛵 *Taxa de entrega: R$ 4,00*`;
+    msg += `\n💰 *TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+    msg += `\n\n📦 *Tipo: ENTREGA*`;
+    msg += `\n📍 *Endereço: ${endereco}*`;
+  } else {
+    msg += `\n💰 *TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+    msg += `\n\n🚶 *Tipo: VOU BUSCAR NO LOCAL*`;
+  }
+
   msg += `\n💳 *Pagamento: ${pagamento}*`;
   if(troco) msg += `\n💵 *Troco para: ${troco}*`;
-  msg += `\n📍 *Endereço: ${endereco}*`;
-  if(obsGeral) msg += `\n📝 *Obs. geral: ${obsGeral}*`;
+  if(obsGeral) msg += `\n📝 *Obs: ${obsGeral}*`;
   msg += '\n━━━━━━━━━━━━━━━━━━━━';
-  msg += '\n_Pedido recebido pelo site McLanche PitDog_';
+  msg += '\n_Pedido via site McLanche PitDog_';
 
-  const encoded = encodeURIComponent(msg);
-  window.open('https://wa.me/5562993051564?text=' + encoded, '_blank');
+  window.open('https://wa.me/5562993051564?text=' + encodeURIComponent(msg), '_blank');
 }
 
 // ─── TABS ───
@@ -965,7 +1024,7 @@ function openCart(){
   document.getElementById('cartOverlay').classList.add('open');
   document.getElementById('cartDrawer').classList.add('open');
   document.body.style.overflow = 'hidden';
-  renderCart(); // força re-render ao abrir
+  renderCart();
 }
 function closeCart(){
   document.getElementById('cartOverlay').classList.remove('open');
@@ -983,6 +1042,7 @@ function showToast(msg){
 
 // ─── INIT ───
 loadCart();
+renderCart();
 </script>
 </body>
 </html>
